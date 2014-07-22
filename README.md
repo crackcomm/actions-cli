@@ -70,7 +70,7 @@ $ music youtube 2pac letter to my unborn child
 |-----------------------------------------------------------------------------------------------------------------------|
 | keywords    | 2pac, tupac, letter, to, my, unborn                                                                     |
 |-----------------------------------------------------------------------------------------------------------------------|
-| description | go to CamCaponeNews.Com http://www.camcaponenews.com/ for all the latest in west coast hip hopAlbum:... |
+| description | Album:Until The End Of Time Disk 1 Song"Letter To My UnBorn" By:Tupac A. Shakur Tha Song And Tha Pic    |
 |-----------------------------------------------------------------------------------------------------------------------|
 | image       | http://i1.ytimg.com/vi/SyBjzRrEdE0/hqdefault.jpg                                                        |
 |-----------------------------------------------------------------------------------------------------------------------|
