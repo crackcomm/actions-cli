@@ -1,0 +1,34 @@
+{
+  "name":        "action",
+  "usage":       "action command {args...}",
+  "description": "Makes many interesting things",
+  "commands": [
+    {
+      "name":        "movie",
+      "usage":       "movie {title}",
+      "action":      "filmweb.find",
+      "example":     "action movie Avatar",
+      "description": "Finds movie on filmweb.pl",
+      "arguments": [
+        {"name": "title", "required": true, "push": "query.q"}
+      ]
+    }, {
+      "name":        "music",
+      "usage":       "music {title}",
+      "action":      "youtube.find",
+      "example":     "action music 2pac",
+      "description": "Finds music on youtube.com",
+      "arguments": [
+        {"name": "title", "required": true, "push": "query.search_query"}
+      ]
+    }, {
+      "name":        "get",
+      "action":      "http.get",
+      "example":     "action get http://google.com",
+      "description": "Requests HTTP url and prints response",
+      "arguments": [
+        {"name": "url", "required": true}
+      ]
+    }
+  ]
+}

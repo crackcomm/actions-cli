@@ -1,0 +1,15 @@
+{
+  "name": "http.request",
+  "ctx": {
+    "url": "http://www.filmweb.pl/search"
+  },
+  "next": {
+    "name": "filmweb.result",
+    "next": {
+      "name": "filmweb.request",
+      "next": {
+        "name": "filmweb.extract"
+      }
+    }
+  }
+}
