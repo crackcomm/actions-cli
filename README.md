@@ -16,6 +16,10 @@ Example json commands
   "name":        "music",
   "usage":       "music command {args...}",
   "description": "Looks for music on the internet",
+  "sources":     [
+    "./music-app/actions",
+    "http://127.0.0.1:3000/crackcomm/music-app/actions/"
+  ],
   "commands": [
     {
       "name":        "youtube",
