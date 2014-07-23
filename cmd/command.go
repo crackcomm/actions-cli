@@ -4,10 +4,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/crackcomm/go-actions/action"
+	"github.com/crackcomm/go-actions/core"
 	"github.com/crackcomm/go-actions/local"
+	"github.com/crackcomm/go-actions/source/file"
+	"github.com/crackcomm/go-actions/source/http"
 	"github.com/crackcomm/go-clitable"
 	"github.com/gonuts/commander"
 	"io/ioutil"
+	"net/url"
 	"strings"
 )
 
@@ -25,11 +29,13 @@ example:
 type Command struct {
 	Name        string      `json:"name"`
 	Usage       string      `json:"usage"`
-	Example     string      `json:"example"`     // one line example
+	Example     string      `json:"example"` // one line example
 	Description string      `json:"description"`
 	Arguments   Arguments   `json:"arguments"`
-	IAction     interface{} `json:"action"`      // action to run (string or map)
-	Commands    Commands    `json:"commands"`    // list of subcommands
+	Flags       Arguments   `json:"flags"`
+	IAction     interface{} `json:"action"`   // action to run (string or map)
+	Commands    Commands    `json:"commands"` // list of subcommands
+	Sources     []string    `json:"sources"`  // list of actions sources
 }
 
 // Commander - Creates and returns `commander.Command` structure.
@@ -39,23 +45,37 @@ func (cmd *Command) Commander() *commander.Command {
 		Short:     cmd.Description,
 		Long:      cmd.LongDescription(),
 	}
+
 	// Add handler if action is not empty
 	if cmd.IAction != nil {
 		c.Run = cmd.Handler
 	}
+
 	// Add subcommands if any
 	if cmd.Commands != nil {
 		c.Subcommands = cmd.Commands.Commander()
 	}
+
+	// Add default flags
 	c.Flag.String("format", "table", "result display format")
 	c.Flag.Bool("q", false, "only print error and warning messages, all other output will be suppressed")
+
+	// Bind flags
+	if cmd.Flags == nil {
+		return c
+	}
+
+	for _, flag := range cmd.Flags {
+		c.Flag.String(flag.Name, flag.Value, flag.Description)
+	}
+
 	return c
 }
 
 // Handler - Returns command handler that runs cmd.Action.
 func (cmd *Command) Handler(ctx *commander.Command, args []string) (err error) {
 	// Parse arguments
-	context, err := cmd.ParseArgs(args)
+	context, err := cmd.ParseContext(ctx, args)
 	if err != nil {
 		return
 	}
@@ -107,29 +127,67 @@ func (cmd *Command) Handler(ctx *commander.Command, args []string) (err error) {
 	return
 }
 
-// ParseArgs - Parses command line arguments into action Context.
-func (cmd *Command) ParseArgs(args []string) (res action.Map, err error) {
+// ParseContext - Parses command line arguments into action Context.
+func (cmd *Command) ParseContext(ctx *commander.Command, args []string) (res action.Map, err error) {
 	res = action.Map{}
+
+	// Extract arguments from `args`
 	for n, arg := range cmd.Arguments {
 		// If no more arguments - return
 		if len(args) < n+1 {
-			// If argument is required - return error
-			if arg.Required {
-				err = fmt.Errorf("Argument %s is required.", arg.Name)
-			}
-			return
+			break
 		}
+
 		// Get argument value
-		var value string
 		// If argument is last - get the rest, otherwise just first part
+		var value string
 		if len(cmd.Arguments) <= n+1 {
 			value = strings.Join(args[n:], " ")
 		} else {
 			value = args[n]
 		}
+
+		// Set default value if empty
+		if value == "" {
+			value = arg.Value
+		}
+
 		// Push value to result
 		res.Push(arg.PushName(), value)
 	}
+
+	// Extract flags from `ctx`
+	for _, flag := range cmd.Flags {
+		// Get value from flag
+		value := ctx.Flag.Lookup(flag.Name).Value.Get()
+
+		// Pass if it's empty string or nil
+		if v, ok := value.(string); ok && v == "" || value == nil {
+			continue
+		}
+
+		// Push value to result
+		res.Push(flag.PushName(), value)
+	}
+
+	// Check for required arguments
+	for _, arg := range cmd.Arguments {
+		// If argument is empty but required - return error
+		if res.Pull(arg.PushName()).IsNil() && arg.Required {
+			err = fmt.Errorf("Argument %s is required.", arg.Name)
+			return
+		}
+	}
+
+	// Check for required flags
+	for _, flag := range cmd.Flags {
+		// If flag is empty but required - return error
+		if res.Pull(flag.PushName()).IsNil() && flag.Required {
+			err = fmt.Errorf("Flag %s is required.", flag.Name)
+			return
+		}
+	}
+
 	return
 }
 
@@ -172,6 +230,18 @@ func (cmd *Command) RunAction(ctx action.Map) (action.Map, error) {
 func (cmd *Command) Run(args []string) error {
 	// Get commander command
 	app := cmd.Commander()
+
+	// Bind sources
+	for _, source := range cmd.Sources {
+		// If source is a valid url - create http source
+		if IsURL(source) {
+			core.AddSource(&http.Source{Path: source})
+		} else {
+			// Add file source to default core registry
+			core.AddSource(&file.Source{source})
+		}
+	}
+
 	// Run it
 	return app.Dispatch(args[1:])
 }
@@ -208,5 +278,15 @@ func ReadFile(filename string) (cmd *Command, err error) {
 
 	cmd = &Command{}
 	err = json.Unmarshal(body, cmd)
+	return
+}
+
+// IsURL - Returns true if value url scheme is a `http` or `https`.
+func IsURL(value string) (yes bool) {
+	if uri, err := url.Parse(value); err == nil {
+		if uri.Scheme == "http" || uri.Scheme == "https" {
+			yes = true
+		}
+	}
 	return
 }

@@ -7,10 +7,11 @@ import (
 
 // Argument - Argument structure.
 type Argument struct {
-	Name     string `json:"name"`
-	Push     string `json:"push"` // Name in context
-	Required bool   `json:"required"`
-	Value    string `json:"default"`
+	Name        string `json:"name"`
+	Push        string `json:"push"` // Name in context
+	Required    bool   `json:"required"`
+	Value       string `json:"default"`
+	Description string `json:"description"`
 }
 
 // Arguments - Map of arguments.
@@ -47,4 +48,3 @@ func (args Arguments) String() string {
 	}
 	return strings.Join(l, " ")
 }
-
