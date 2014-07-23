@@ -2,8 +2,6 @@ package main
 
 import (
 	"github.com/crackcomm/actions-cli/cmd"
-	"github.com/crackcomm/go-actions/core"
-	"github.com/crackcomm/go-actions/source/file"
 	_ "github.com/crackcomm/go-core/actions"
 	_ "github.com/crackcomm/go-core/filter"
 	_ "github.com/crackcomm/go-core/html"
@@ -25,11 +23,4 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-}
-
-func init() {
-	// Create new file source
-	fileSource := &file.Source{"./actions"}
-	// Add file source to default core registry
-	core.Default.Registry.Sources.Add(fileSource)
 }

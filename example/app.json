@@ -2,15 +2,22 @@
   "name":        "action",
   "usage":       "action command {args...}",
   "description": "Makes many interesting things",
+  "sources":     [
+    "./actions",
+    "http://127.0.0.1:3000/crackcomm/action-app/actions/"
+  ],
   "commands": [
     {
       "name":        "movie",
       "usage":       "movie {title}",
       "action":      "filmweb.find",
-      "example":     "action movie Avatar",
+      "example":     "action movie pulp fiction",
       "description": "Finds movie on filmweb.pl",
       "arguments": [
         {"name": "title", "required": true, "push": "query.q"}
+      ],
+      "flags": [
+        {"name": "title", "required": true, "push": "query.q", "description": "movie title"}
       ]
     }, {
       "name":        "music",

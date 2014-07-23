@@ -6,7 +6,10 @@
   "next": {
     "name": "filmweb.result",
     "next": {
-      "name": "filmweb.request",
+      "name": "http.request",
+      "ctx": {
+        "hostname": "filmweb.pl"
+      },
       "next": {
         "name": "filmweb.extract"
       }
