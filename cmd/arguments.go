@@ -17,17 +17,22 @@ type Argument struct {
 // Arguments - Map of arguments.
 type Arguments []*Argument
 
-// PushName - Returns `a.Push` or `a.Name` if empty.
-func (a *Argument) PushName() string {
-	if a.Push != "" {
-		return a.Push
+// PushName - Returns `arg.Push` or `arg.Name` if empty.
+func (arg *Argument) PushName() string {
+	if arg.Push != "" {
+		return arg.Push
 	}
-	return a.Name
+	return arg.Name
 }
 
 // String - Returns arg name in braces eq. "{arg-name}".
-func (a *Argument) String() string {
-	return fmt.Sprintf("{%s}", a.Name)
+func (arg *Argument) String() string {
+	return fmt.Sprintf("{%s}", arg.Name)
+}
+
+// GoString - Returns GoString used by GoStringer (%#v).
+func (arg *Argument) GoString() string {
+	return fmt.Sprintf("&%#v", *arg)
 }
 
 // Get - Gets argument by name.
