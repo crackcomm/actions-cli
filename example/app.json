@@ -14,7 +14,6 @@
       "example":     "action movie pulp fiction",
       "description": "Finds movie on filmweb.pl",
       "arguments": [
-        {"name": "title", "required": true, "push": "query.q"},
         {"name": "title", "required": true, "push": "query.q"}
       ],
       "flags": [
