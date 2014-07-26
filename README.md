@@ -52,7 +52,8 @@ Build
 Run
 
 	$ go get github.com/crackcomm/actions-cli/app
-	$ APP_FILE=music.json app help
+	$ APP_FILE=music.json
+	$ app help
 	music - Looks for music on the internet
 	...
 
