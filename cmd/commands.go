@@ -11,6 +11,9 @@ type Commands []*Command
 func (commands Commands) Commander() []*commander.Command {
 	list := []*commander.Command{}
 	for _, command := range commands {
+		if command == nil {
+			continue
+		}
 		list = append(list, command.Commander())
 	}
 	return list

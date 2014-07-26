@@ -66,6 +66,9 @@ func (cmd *Command) Commander() *commander.Command {
 	}
 
 	for _, flag := range cmd.Flags {
+		if flag == nil {
+			continue
+		}
 		c.Flag.String(flag.Name, flag.Value, flag.Description)
 	}
 
@@ -79,6 +82,9 @@ func (cmd *Command) Handler(ctx *commander.Command, args []string) (err error) {
 	if err != nil {
 		return
 	}
+
+	// Bind sources
+	cmd.BindSources()
 
 	// Run action
 	res, err := cmd.RunAction(context)
@@ -226,12 +232,8 @@ func (cmd *Command) RunAction(ctx action.Map) (action.Map, error) {
 	return local.Run(a)
 }
 
-// Run - Runs command.
-func (cmd *Command) Run(args []string) error {
-	// Get commander command
-	app := cmd.Commander()
-
-	// Bind sources
+// BindSources - Binds command actions sources.
+func (cmd *Command) BindSources() {
 	for _, source := range cmd.Sources {
 		// If source is a valid url - create http source
 		if IsURL(source) {
@@ -241,6 +243,15 @@ func (cmd *Command) Run(args []string) error {
 			core.AddSource(&file.Source{source})
 		}
 	}
+}
+
+// Run - Runs command.
+func (cmd *Command) Run(args []string) error {
+	// Get commander command
+	app := cmd.Commander()
+
+	// Bind sources
+	cmd.BindSources()
 
 	// Run it
 	return app.Dispatch(args[1:])
@@ -267,6 +278,11 @@ func (cmd *Command) LongDescription() string {
 		example = cmd.Usage
 	}
 	return fmt.Sprintf(LongDescriptionTemplate, cmd.Description, example)
+}
+
+// GoString - Returns GoString used by GoStringer (%#v).
+func (cmd *Command) GoString() string {
+	return fmt.Sprintf("&%#v", *cmd)
 }
 
 // ReadFile - Reads file unmarshals JSON body and returns a Command.
