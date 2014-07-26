@@ -28,13 +28,33 @@ Example json commands
       "description": "Looks for music on YouTube",
       "arguments": [
         {"name": "title", "required": true, "push": "query.search_query"}
+      ],
+      "flags": [
+        {"name": "title", "required": true, "push": "query.search_query"}
       ]
     }
   ]
 }
 ```
 
-Result
+### Result
+
+You can build this app or run straight from json file.
+
+Build
+
+	$ go get github.com/crackcomm/actions-cli/app-build
+	$ app-build -app=music.json -o=music
+	$ music help
+	music - Looks for music on the internet
+	...
+
+Run
+
+	$ go get github.com/crackcomm/actions-cli/app
+	$ APP_FILE=music.json app help
+	music - Looks for music on the internet
+	...
 
 ```
 $ music
