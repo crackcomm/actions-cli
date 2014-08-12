@@ -1,6 +1,6 @@
 # actions-cli
 
-Application for constructing command line applications using only .json files.
+Application for constructing command line applications using just json or yaml files.
 
 To construct a command line application we need two things
 
@@ -9,32 +9,32 @@ To construct a command line application we need two things
 
 ## Example
 
-Example json commands
+Example YAML commands
 
-```JSON
-{
-  "name":        "music",
-  "usage":       "music command {args...}",
-  "description": "Looks for music on the internet",
-  "sources":     [
-    "./music-app/actions",
-    "http://127.0.0.1:3000/crackcomm/music-app/actions/"
-  ],
-  "commands": [
-    {
-      "name":        "youtube",
-      "action":      "youtube.find",
-      "example":     "music youtube 2pac",
-      "description": "Looks for music on YouTube",
-      "arguments": [
-        {"name": "title", "required": true, "push": "query.search_query"}
-      ],
-      "flags": [
-        {"name": "title", "required": true, "push": "query.search_query"}
-      ]
-    }
-  ]
-}
+```YAML
+name: "music"
+usage: "music command {args...}"
+description: "Looks for music on the internet"
+sources: 
+  - "./music-app/actions"
+  - "http://127.0.0.1:3000/crackcomm/music-app/actions/"
+commands: 
+  - 
+    name: "youtube"
+    action: "youtube.find"
+    example: "music youtube 2pac"
+    description: "Looks for music on YouTube"
+    arguments: 
+      - 
+        name: "title"
+        required: true
+        push: "query.search_query"
+    flags: 
+      - 
+        name: "title"
+        required: true
+        push: "query.search_query"
+
 ```
 
 ### Result
