@@ -1,5 +1,8 @@
 - html.extract:
     selectors: 
+      url:
+        $extract: href
+        $path: link[rel='canonical']
       original_title: div.filmTitle h2
       description: div.filmPlot p
       title: div.filmTitle h1
