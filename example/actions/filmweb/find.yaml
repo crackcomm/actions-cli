@@ -1,0 +1,6 @@
+- http.request:
+    url: "http://www.filmweb.pl/search"
+- filmweb.result
+- http.request:
+    hostname: "filmweb.pl"
+- filmweb.extract
