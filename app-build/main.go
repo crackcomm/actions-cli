@@ -1,3 +1,4 @@
+// Package app-build implements static builder for actions commands.
 package main
 
 import (
@@ -9,11 +10,11 @@ import (
 	_ "github.com/crackcomm/go-core/html"
 	_ "github.com/crackcomm/go-core/http"
 	_ "github.com/crackcomm/go-core/log"
-	"path/filepath"
 	"io/ioutil"
-	"os/exec"
 	"log"
 	"os"
+	"os/exec"
+	"path/filepath"
 	"strings"
 )
 
@@ -145,7 +146,7 @@ func buildApp(c *cmd.Command, output string) (err error) {
 
 	// Write application source code to file
 	err = ioutil.WriteFile(appfile, []byte(app), os.ModePerm)
-	
+
 	// Build application
 	command := exec.Command("go", "build", "-o", output, appfile)
 	err = command.Run()
