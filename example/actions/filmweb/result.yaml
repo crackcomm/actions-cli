@@ -1,5 +1,5 @@
 - html.extract:
     selectors: 
       pathname: 
-        $extract: "href"
-        $path: "ul.resultsList li:first-child h3 a"
+        $extract: href
+        $path: ul.resultsList li:first-child h3 a
