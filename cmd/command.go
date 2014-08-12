@@ -10,6 +10,8 @@ import (
 	"github.com/crackcomm/go-actions/source/http"
 	"github.com/crackcomm/go-clitable"
 	"github.com/gonuts/commander"
+	"gopkg.in/v1/yaml"
+	"path/filepath"
 	"io/ioutil"
 	"net/url"
 	"strings"
@@ -27,15 +29,15 @@ example:
 
 // Command - Command structure.
 type Command struct {
-	Name        string      `json:"name"`
-	Usage       string      `json:"usage"`
-	Example     string      `json:"example"` // one line example
-	Description string      `json:"description"`
-	Arguments   Arguments   `json:"arguments"`
-	Flags       Arguments   `json:"flags"`
-	IAction     interface{} `json:"action"`   // action to run (string or map)
-	Commands    Commands    `json:"commands"` // list of subcommands
-	Sources     []string    `json:"sources"`  // list of actions sources
+	Name        string      `json:"name" yaml:"name"`
+	Usage       string      `json:"usage" yaml:"usage"`
+	Example     string      `json:"example" yaml:"example"` // one line example
+	Description string      `json:"description" yaml:"description"`
+	Arguments   Arguments   `json:"arguments" yaml:"arguments"`
+	Flags       Arguments   `json:"flags" yaml:"flags"`
+	IAction     interface{} `json:"action" yaml:"action"`   // action to run (string or map)
+	Commands    Commands    `json:"commands" yaml:"commands"` // list of subcommands
+	Sources     []string    `json:"sources" yaml:"sources"`  // list of actions sources
 }
 
 // Commander - Creates and returns `commander.Command` structure.
@@ -125,6 +127,7 @@ func (cmd *Command) Handler(ctx *commander.Command, args []string) (err error) {
 		if len(value) >= 100 {
 			value = value[:100] + "..."
 		}
+
 		res.Add(key, value)
 	}
 
@@ -236,7 +239,7 @@ func (cmd *Command) RunAction(ctx action.Map) (action.Map, error) {
 func (cmd *Command) BindSources() {
 	for _, source := range cmd.Sources {
 		// If source is a valid url - create http source
-		if IsURL(source) {
+		if isURL(source) {
 			core.AddSource(&http.Source{Path: source})
 		} else {
 			// Add file source to default core registry
@@ -285,7 +288,7 @@ func (cmd *Command) GoString() string {
 	return fmt.Sprintf("&%#v", *cmd)
 }
 
-// ReadFile - Reads file unmarshals JSON body and returns a Command.
+// ReadFile - Reads file unmarshals JSON or YAML body and returns a Command.
 func ReadFile(filename string) (cmd *Command, err error) {
 	body, err := ioutil.ReadFile(filename)
 	if err != nil {
@@ -293,12 +296,19 @@ func ReadFile(filename string) (cmd *Command, err error) {
 	}
 
 	cmd = &Command{}
-	err = json.Unmarshal(body, cmd)
+
+	switch filepath.Ext(filename) {
+	case ".json":
+		err = json.Unmarshal(body, cmd)
+	case ".yaml":
+		err = yaml.Unmarshal(body, cmd)
+	}
+
 	return
 }
 
-// IsURL - Returns true if value url scheme is a `http` or `https`.
-func IsURL(value string) (yes bool) {
+// isURL - Returns true if value url scheme is a `http` or `https`.
+func isURL(value string) (yes bool) {
 	if uri, err := url.Parse(value); err == nil {
 		if uri.Scheme == "http" || uri.Scheme == "https" {
 			yes = true
