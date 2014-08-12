@@ -20,16 +20,12 @@ sources:
   - "http://127.0.0.1:3000/crackcomm/music-app/actions/"
 commands: 
   - 
-    name: "youtube"
-    action: "youtube.find"
-    example: "music youtube 2pac"
-    description: "Looks for music on YouTube"
+    name: youtube
+    usage: youtube {title}
+    example: app youtube 2pac
+    description: Finds music on youtube.com
+    action: youtube.find
     arguments: 
-      - 
-        name: "title"
-        required: true
-        push: "query.search_query"
-    flags: 
       - 
         name: "title"
         required: true
