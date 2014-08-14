@@ -202,7 +202,7 @@ func (cmd *Command) ParseContext(ctx *commander.Command, args []string) (res act
 
 // Action - Creates and returns action.
 func (cmd *Command) Action(ctx action.Map) *action.Action {
-	value := action.Format{cmd.IAction}
+	value := action.Format{Value: cmd.IAction}
 	// If value is a string it's action name
 	if name, ok := value.String(); ok {
 		return &action.Action{
@@ -243,7 +243,7 @@ func (cmd *Command) BindSources() {
 			core.AddSource(&http.Source{Path: source})
 		} else {
 			// Add file source to default core registry
-			core.AddSource(&file.Source{source})
+			core.AddSource(&file.Source{Path: source})
 		}
 	}
 }
