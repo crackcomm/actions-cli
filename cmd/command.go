@@ -3,18 +3,17 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"net/url"
+	"path/filepath"
+	"strings"
+
 	"github.com/crackcomm/go-actions/action"
 	"github.com/crackcomm/go-actions/core"
 	"github.com/crackcomm/go-actions/local"
-	"github.com/crackcomm/go-actions/source/file"
-	"github.com/crackcomm/go-actions/source/http"
 	"github.com/crackcomm/go-clitable"
 	"github.com/gonuts/commander"
 	"gopkg.in/v1/yaml"
-	"path/filepath"
-	"io/ioutil"
-	"net/url"
-	"strings"
 )
 
 // UsageDescriptionTemplate - Used to construct usage description. (name + args)
@@ -35,9 +34,9 @@ type Command struct {
 	Description string      `json:"description" yaml:"description"`
 	Arguments   Arguments   `json:"arguments" yaml:"arguments"`
 	Flags       Arguments   `json:"flags" yaml:"flags"`
-	IAction     interface{} `json:"action" yaml:"action"`   // action to run (string or map)
+	IAction     interface{} `json:"action" yaml:"action"`     // action to run (string or map)
 	Commands    Commands    `json:"commands" yaml:"commands"` // list of subcommands
-	Sources     []string    `json:"sources" yaml:"sources"`  // list of actions sources
+	Sources     []string    `json:"sources" yaml:"sources"`   // list of actions sources
 }
 
 // Commander - Creates and returns `commander.Command` structure.
@@ -238,13 +237,7 @@ func (cmd *Command) RunAction(ctx action.Map) (action.Map, error) {
 // BindSources - Binds command actions sources.
 func (cmd *Command) BindSources() {
 	for _, source := range cmd.Sources {
-		// If source is a valid url - create http source
-		if isURL(source) {
-			core.AddSource(&http.Source{Path: source})
-		} else {
-			// Add file source to default core registry
-			core.AddSource(&file.Source{Path: source})
-		}
+		core.Source(source)
 	}
 }
 
