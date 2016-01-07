@@ -4,7 +4,7 @@ Application for constructing command line applications using just json or yaml f
 
 To construct a command line application we need two things
 
-1. [Actions](https://bitbucket.org/actions/go-actions)
+1. [Actions](https://github.com/crackcomm/actions)
 2. Commands
 
 ## Example
@@ -15,18 +15,18 @@ Example YAML commands
 name: "music"
 usage: "music command {args...}"
 description: "Looks for music on the internet"
-sources: 
+sources:
   - "./music-app/actions"
   - "http://127.0.0.1:3000/crackcomm/music-app/actions/"
-commands: 
-  - 
+commands:
+  -
     name: youtube
     usage: youtube {title}
     example: app youtube 2pac
     description: Finds music on youtube.com
     action: youtube.find
-    arguments: 
-      - 
+    arguments:
+      -
         name: "title"
         required: true
         push: "query.search_query"
