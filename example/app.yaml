@@ -1,44 +1,44 @@
 name: action
 usage: action command {args...}
 description: Makes many interesting things
-sources: 
-  - ./actions
+sources:
+  - file://actions
   - http://127.0.0.1:3000/api/v1.0/crackcomm/action-app/actions/
-commands: 
-  - 
+commands:
+  -
     name: movie
     usage: movie {title}
     action: filmweb.find
     example: app movie pulp fiction
     description: Finds movie on filmweb.pl
-    arguments: 
-      - 
+    arguments:
+      -
         name: title
         required: true
         push: query.q
-    flags: 
+    flags:
       -
         name: title
         required: true
         push: query.q
         description: movie title
-  - 
+  -
     name: music
     usage: music {title}
     action: youtube.find
     example: app music 2pac
     description: Finds music on youtube.com
-    arguments: 
-      - 
+    arguments:
+      -
         name: title
         required: true
         push: query.search_query
-  - 
+  -
     name: get
     action: http.get
     example: app get http://google.com
     description: Requests HTTP url and prints response
-    arguments: 
-      - 
+    arguments:
+      -
         name: url
         required: true

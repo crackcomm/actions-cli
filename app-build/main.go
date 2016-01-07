@@ -4,18 +4,22 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/crackcomm/actions-cli/cmd"
-	_ "github.com/crackcomm/go-core/actions"
-	_ "github.com/crackcomm/go-core/filter"
-	_ "github.com/crackcomm/go-core/html"
-	_ "github.com/crackcomm/go-core/http"
-	_ "github.com/crackcomm/go-core/log"
 	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
+
+	"github.com/crackcomm/actions-cli/cmd"
+
+	_ "github.com/crackcomm/go-actions/source/file"
+	_ "github.com/crackcomm/go-actions/source/http"
+	_ "github.com/crackcomm/go-core/actions"
+	_ "github.com/crackcomm/go-core/filter"
+	_ "github.com/crackcomm/go-core/html"
+	_ "github.com/crackcomm/go-core/http"
+	_ "github.com/crackcomm/go-core/log"
 )
 
 // AppFile - File containing application.
@@ -28,6 +32,8 @@ var appBase = `package main
 
 import (
 	"github.com/crackcomm/actions-cli/cmd"
+	_ "github.com/crackcomm/go-actions/source/file"
+	_ "github.com/crackcomm/go-actions/source/http"
 	_ "github.com/crackcomm/go-core"
 	"log"
 	"os"
