@@ -58,7 +58,7 @@ func (cmd *Command) Commander() *commander.Command {
 	}
 
 	// Add default flags
-	c.Flag.String("format", "table", "result display format")
+	c.Flag.String("format", "table", "result display format (table or json)")
 	c.Flag.Bool("q", false, "only print error and warning messages, all other output will be suppressed")
 
 	// Bind flags

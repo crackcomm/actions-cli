@@ -9,11 +9,13 @@ To construct a command line application we need two things
 
 ## Example
 
-Example YAML commands
+To simply see what its capable of build of [example](https://github.com/crackcomm/actions-cli/tree/master/example) application can be done using `make example`.
 
-```YAML
+### Example YAML application
+
+```yaml
 name: "music"
-usage: "music command {args...}"
+usage: "command {args...}"
 description: "Looks for music on the internet"
 sources:
   - "./music-app/actions"
@@ -21,8 +23,8 @@ sources:
 commands:
   -
     name: youtube
-    usage: youtube {title}
-    example: app youtube 2pac
+    usage: {title}
+    example: 2pac
     description: Finds music on youtube.com
     action: youtube.find
     arguments:
@@ -33,7 +35,7 @@ commands:
 
 ```
 
-### Result
+#### Result
 
 You can build this app or run straight from json file.
 
@@ -53,7 +55,7 @@ Run
 	music - Looks for music on the internet
 	...
 
-```
+```sh
 $ music
 music - Looks for music on the internet
 
@@ -133,17 +135,17 @@ package main
 
 import (
 	"github.com/crackcomm/go-actions/core"
-	"github.com/crackcomm/go-actions/source/file"
+	_ "github.com/crackcomm/go-actions/source/file"
+	_ "github.com/crackcomm/go-actions/source/http"
 	// ...
 )
 
 // ...
 
 func init() {
-	// Create new file source
-	fileSource := &file.Source{"./actions"}
 	// Add file source to default core registry
-	core.Default.Registry.Sources.Add(fileSource)
+	core.Source("http://127.0.0.1:3000/api/v1.0/crackcomm/action-app/actions/")
+	core.Source("file://actions")
 }
 ```
 

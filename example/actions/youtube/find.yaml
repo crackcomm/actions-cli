@@ -3,38 +3,38 @@
     query:
       search_query: 2pac to my unborn child
 - html.extract:
-    selectors: 
-      url: 
+    selectors:
+      url:
         $path: ol.item-section li:first-child div.yt-lockup h3.yt-lockup-title a
         $extract: href
 - http.get:
     hostname: youtube.com
 - html.extract:
-    selectors: 
-      title: 
+    selectors:
+      title:
         $path: meta[itemprop='name']
         $extract: content
       description: div#watch-description-text p
-      image: 
+      image:
         $path: link[itemprop='thumbnailUrl']
         $extract: href
-      url: 
+      url:
         $path: link[rel='canonical']
         $extract: href
-      rating: 
-        likes: 
+      rating:
+        likes:
           $extract: number
           $path: span.likes-count
-        dislikes: 
+        dislikes:
           $extract: number
           $path: span.dislikes-count
       author: #watch-header div.yt-user-info a.yt-user-name
-      views: 
+      views:
         $path: div.watch-view-count
         $extract: number
-      keywords: 
+      keywords:
         $path: meta[name='keywords']
         $extract: content
-- filter.string.trim:
-    trim: 
+- filter.trim.spaces:
+    trim:
       - title
